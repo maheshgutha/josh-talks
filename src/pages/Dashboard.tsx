@@ -229,8 +229,13 @@ export function Dashboard({ onBack }: { onBack: () => void }) {
                   <ul className="mt-3 space-y-1.5">
                     {split.map((s) => (
                       <li key={s.name} className="flex items-center justify-between text-sm">
-                        <span className="flex items-center gap-2 text-ink-soft"><span className="h-3 w-3 rounded-full" style={{ background: s.color }} aria-hidden="true" />{s.name}</span>
-                        <span className="font-semibold text-ink">{Math.round((s.value / reviews.length) * 100)}%</span>
+                        <span className="flex items-center gap-2 text-ink-soft">
+                          <span className="h-3 w-3 rounded-full" style={{ background: s.color }} aria-hidden="true" />
+                          {s.name}
+                        </span>
+                        <span className="font-semibold text-ink">
+                          {s.value} vote{s.value === 1 ? "" : "s"} ({Math.round((s.value / reviews.length) * 100)}%)
+                        </span>
                       </li>
                     ))}
                   </ul>

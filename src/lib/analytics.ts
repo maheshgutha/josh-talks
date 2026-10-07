@@ -70,10 +70,11 @@ export function promptRows(reviews: Review[]) {
 export function preferenceSplit(reviews: Review[]) {
   const valid = reviews.filter(hasModels);
   const colors: Record<ModelId, string> = { gpt: "#4f46e5", g25: "#f97316", g31: "#0891b2" };
-  return [
-    ...models.map((m) => ({ name: m.short, value: valid.filter((r) => winnerOf(r) === m.id).length, color: colors[m.id] })),
-    { name: "Tie", value: valid.filter((r) => r.choice === "tie").length, color: "#94a3b8" },
-  ];
+  const modelEntries = models
+    .map((m) => ({ name: m.short, value: valid.filter((r) => winnerOf(r) === m.id).length, color: colors[m.id] }))
+    .sort((a, b) => b.value - a.value);
+  const tieCount = valid.filter((r) => r.choice === "tie").length;
+  return [...modelEntries, { name: "Tie", value: tieCount, color: "#94a3b8" }];
 }
 
 export function leaderboard(stats: ModelStats[]) {

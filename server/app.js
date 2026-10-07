@@ -107,6 +107,20 @@ export function createApp(db, { adminKey = "", corsOrigin = "" } = {}) {
     }),
   );
 
+  // Serve static frontend in production if dist exists
+  import("path").then(({ default: path }) => {
+    import("fs").then(({ default: fs }) => {
+      const distPath = path.resolve(process.cwd(), "dist");
+      if (fs.existsSync(distPath)) {
+        app.use(express.static(distPath));
+        app.get("*", (req, res, next) => {
+          if (req.path.startsWith("/api/")) return next();
+          res.sendFile(path.join(distPath, "index.html"));
+        });
+      }
+    });
+  });
+
   // eslint-disable-next-line no-unused-vars
   app.use((err, _req, res, _next) => {
     console.error(err);
